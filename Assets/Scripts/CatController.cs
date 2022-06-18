@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 
+
 public class CatController : MonoBehaviour
 {
     //Stores input from the PlayerInput
@@ -13,10 +14,10 @@ public class CatController : MonoBehaviour
 
     bool hasMoved;
 
-    Animator animator;
-    private const string LEFT_DOWN_ANIMATION = "left_down_animation";
-    private const string LEFT_TOP_ANIMATION = "left_top_animation";
-    private const string LEFT_ANIMATION = "left_animation";
+    public Animator animator;
+    public static string LEFT_DOWN_ANIMATION = "left_down_animation";
+    public static string LEFT_TOP_ANIMATION = "left_top_animation";
+    public static string LEFT_ANIMATION = "left_animation";
     private bool animationOn = false;
 
 

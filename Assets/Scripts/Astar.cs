@@ -197,6 +197,33 @@ public class Astar : MonoBehaviour
     }
 
 
+
+    public void AnimatorCat(Vector3Int pos)
+    {
+        CatController catCtr = (CatController)Cat.GetComponent("CatController");
+        if (pos.x < startPos.x)//left
+        {
+            Cat.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 0f));
+        }else{
+            Cat.transform.rotation = Quaternion.Euler(new Vector3(0f, 180f, 0f));
+        }
+
+        catCtr.resetAnimation();
+
+        if (pos.y == startPos.y)//lateral left
+        {
+            catCtr.animator.SetBool(CatController.LEFT_ANIMATION, true);
+        }
+        if (pos.y < startPos.y)//lateral down left
+        {
+            catCtr.animator.SetBool(CatController.LEFT_DOWN_ANIMATION, true);
+        }
+        if (pos.y > startPos.y)//lateral top left
+        {
+            catCtr.animator.SetBool(CatController.LEFT_TOP_ANIMATION, true);
+        }
+    }
+
     public void moveCat(Vector3Int pos)
     {
         if(checkGoalPosition(pos))
@@ -204,7 +231,7 @@ public class Astar : MonoBehaviour
             gameEnded = true;
 
         }
-
+        AnimatorCat(pos);
         //Move Cat to the first position of the best path
         Vector3 catPos = tilemap.CellToWorld(pos);
         Cat.transform.position = new Vector3(catPos.x, catPos.y+0.4f, 10);
