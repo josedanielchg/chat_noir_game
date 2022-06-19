@@ -18,7 +18,6 @@ public class CatController : MonoBehaviour
     public static string LEFT_DOWN_ANIMATION = "left_down_animation";
     public static string LEFT_TOP_ANIMATION = "left_top_animation";
     public static string LEFT_ANIMATION = "left_animation";
-    private bool animationOn = false;
 
 
     void Awake()

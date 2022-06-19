@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 public enum TileType { START, GOAL, ROCK, GRASS, PATH }
@@ -27,6 +28,24 @@ public class Astar : MonoBehaviour
     [SerializeField]
     private LayerMask layerMask;
 
+    [SerializeField]
+    private GameObject loseText;
+
+    [SerializeField]
+    private GameObject winText;
+
+    [SerializeField]
+    private GameObject gameComplete;
+
+    [SerializeField]
+    private GameObject gameLose;
+
+    [SerializeField]
+    private AudioSource rockSound;
+
+    [SerializeField]
+    private AudioSource catSound;
+
     private Vector3Int startPos, goalPos;
 
     List<Vector3Int> rockList = new List<Vector3Int>();
@@ -52,6 +71,8 @@ public class Astar : MonoBehaviour
     private Dictionary<Vector3Int, Node> allNodes = new Dictionary<Vector3Int, Node>();
 
     private bool gameEnded = false;
+
+    private int moves = 0;
 
     private void Awake()
     {
@@ -154,10 +175,12 @@ public class Astar : MonoBehaviour
             }
         }
 
+
         if(openList.Count == 0 && path==false && bestPath == null)
         {
-            //TODO: move Random until it can't
-            Debug.Log("You WIN");
+            TextMeshProUGUI textM = (TextMeshProUGUI)winText.GetComponent("TextMeshProUGUI");
+            textM.text = moves.ToString();
+            gameComplete.SetActive(true);
         }
 
         //Then it still can move to the bounds of the tilemap
@@ -196,8 +219,6 @@ public class Astar : MonoBehaviour
         allNodes = new Dictionary<Vector3Int, Node>();
     }
 
-
-
     public void AnimatorCat(Vector3Int pos)
     {
         CatController catCtr = (CatController)Cat.GetComponent("CatController");
@@ -229,8 +250,11 @@ public class Astar : MonoBehaviour
         if(checkGoalPosition(pos))
         {
             gameEnded = true;
-
+            TextMeshProUGUI textM = (TextMeshProUGUI)loseText.GetComponent("TextMeshProUGUI");
+            textM.text = moves.ToString();
+            gameLose.SetActive(true);
         }
+        moves++;
         AnimatorCat(pos);
         //Move Cat to the first position of the best path
         Vector3 catPos = tilemap.CellToWorld(pos);
@@ -369,6 +393,7 @@ public class Astar : MonoBehaviour
     {
         rockList.Add(clickPos);
         tilemap.SetTile(clickPos, tiles[(int)TileType.ROCK]);
+        rockSound.Play();
     }
 
     //Check if we already reach to the goal, and returns a stack with the path (in reverse).
@@ -399,7 +424,7 @@ public class Astar : MonoBehaviour
 
     private void generateRocks()
     {
-        int numberOfRocks = Random.Range(3, 6);
+        int numberOfRocks = Random.Range(4, 6);
 
         for(int i=0; i<numberOfRocks; i++)
         {
